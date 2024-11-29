@@ -47,11 +47,27 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-TODO: Add your text here!!!
+Here is a brief explanation of the code used to create a thresholded binary image:
+
+The color_threshold function processes the image in two color spaces, HLS and HSV. It extracts the saturation (S) channel from HLS and the value (V) channel from HSV, applying thresholds to each. The resulting binary masks are combined to isolate pixels based on their color and brightness.
+
+The magnitude_threshold function calculates the gradient magnitude of the image using Sobel operators in the x and y directions. The combined gradient magnitude is then scaled and thresholded to produce a binary image that highlights edges based on changes in intensity.
+
+The combine_thresholds function creates a binary image by combining two separate thresholding methods: one based on gradient magnitude and the other on color filtering. It merges the results into a single binary mask, where pixels are set to 1 if they meet the criteria from either method.
+
+<p align="center">
+  <img src="test_images/straight_lines2.jpg" alt="Image 1" width="30%"/>
+  <img src="binary_image.jpg" alt="Image 2" width="30%"/>
+</p>
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-TODO: Add your text here!!!
+The first step in performing a perspective (birds-eye) transform is to define the source and destination points. The source point were made by manually selecting the four corners of the road in the image so we made so called Region of Interes. The destination point were selected by manually selecting the four corners of the road in the birds-eye view. SOurce and destination points are different for different image size.
+
+Then we perform the perspective transform with OpenCV cv2.getPerspectiveTransform() and cv.warpPerspective().
+
+Later on in draw.py i used cv2.getPerspectiveTransform() again to inverse matrix in order to print lines on normal perspective.
+
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 

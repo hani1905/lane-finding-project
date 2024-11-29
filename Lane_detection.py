@@ -24,7 +24,7 @@ if __name__ == "__main__":
         cal.calibration()
     
    
-    input_video_path = "test_videos/project_video03.mp4"  
+    input_video_path = "test_videos/project_video01.mp4"  
     output_video_path = "output_video/output.mp4"  
 
     cap = cv2.VideoCapture(input_video_path)
@@ -49,11 +49,10 @@ if __name__ == "__main__":
         if not ret:
             break  
         
-        
+
         # 1. CALIBRATION - Korekcija distorzije slike
         calibrated_image = dc.correct_distrotion(frame)
 
-        
         # 2. binary image
         binary_output = bi.combine_thresholds(calibrated_image)
 
@@ -69,17 +68,29 @@ if __name__ == "__main__":
         cv2.fillPoly(mask, roi_corners, 255)
         mask1 = cv2.bitwise_and(binary_output, mask)
 
+        if width == 1280:
         # WARPING BIRDS EYE
-        pt_A = [0, height]
-        pt_B = [width, height]
-        pt_C = [width * 0.6 - 80, height / 2 + 90]
-        pt_D = [width * 0.45 + 20, height / 2 + 90]
+            pt_A = [0, height]
+            pt_B = [width, height]
+            pt_C = [width * 0.6 - 80, height / 2 + 90]
+            pt_D = [width * 0.45 + 40, height / 2 + 90]
 
-        src = np.float32([pt_D, pt_A, pt_B, pt_C])
-        dst = np.float32([[0 + 400, 0],
-                          [0 + 200, height],
-                          [width - 200, height],
-                          [width - 350, 0]])
+            src = np.float32([pt_D, pt_A, pt_B, pt_C])
+            dst = np.float32([[0 + 400, 0],
+                            [0 + 200, height],
+                            [width - 200, height],
+                            [width - 350, 0]])
+        else:
+            pt_A = [0, height]
+            pt_B = [width, height]
+            pt_C = [558,343]
+            pt_D = [476,343]
+
+            src = np.float32([pt_D, pt_A, pt_B, pt_C])
+            dst = np.float32([[200, 0],
+                            [0 + 150, height],
+                            [width - 150, height],
+                            [width - 200, 0]])
 
         warped = be.warper(mask1 * 255, src, dst)
 
