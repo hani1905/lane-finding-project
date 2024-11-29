@@ -25,18 +25,11 @@ The goals / steps of this project are the following:
 
 ---
 
-### Writeup / README
-
-#### 1. Provide a Writeup that includes all the rubric points and how you addressed each one.
-
-You're reading it!
-
 ### Camera Calibration
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-TODO: Add your text here!!!
-
+Set of chessboard images with visible pattern are used to compute the camera matrix and distortion coefficients, but firstly detect the corners of the chessboard. Then 3D point were paired with the 2D points for each calibration image. Cv.calibrateCamera() function was used to compute the camera matrix and distortion coefficients. The result is stored in camera_cal/calib.npz.
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
