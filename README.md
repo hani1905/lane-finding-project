@@ -68,6 +68,9 @@ Then we perform the perspective transform with OpenCV cv2.getPerspectiveTransfor
 
 Later on in draw.py i used cv2.getPerspectiveTransform() again to inverse matrix in order to print lines on normal perspective.
 
+<p align="center">
+  <img src="test_images/straight_lines1.jpg" alt="Image 1" width="30%"/>
+  <img src="birdseye.jpg" alt="Image 1" width="30%"/>
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
