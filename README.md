@@ -31,7 +31,10 @@ The goals / steps of this project are the following:
 
 Set of chessboard images with visible pattern are used to compute the camera matrix and distortion coefficients, but firstly detect the corners of the chessboard. Then 3D point were paired with the 2D points for each calibration image. Cv.calibrateCamera() function was used to compute the camera matrix and distortion coefficients. The result is stored in camera_cal/calib.npz.
 
-![Original][camera_cal/calibration1.jpg]
+<p align="center">
+  <img src="camera_cal/calibration1.jpg" alt="Image 1" width="30%"/>
+width="30%" />
+</p>
 
 ### Pipeline (single images)
 
