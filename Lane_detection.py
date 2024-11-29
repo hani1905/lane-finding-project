@@ -42,6 +42,7 @@ if __name__ == "__main__":
    
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+    image = cv2.imread("test_images/straight_lines2.jpg")
 
     while True:
         ret, frame = cap.read()
@@ -49,10 +50,12 @@ if __name__ == "__main__":
         if not ret:
             break  
         
-
+        
         # 1. CALIBRATION - Korekcija distorzije slike
-        calibrated_image = dc.correct_distrotion(frame)
+        calibrated_image = dc.correct_distrotion(image)
+        cv2.imwrite("calibrated_image1.jpg", calibrated_image)
 
+        '''
         # 2. binary image
         binary_output = bi.combine_thresholds(calibrated_image)
 
@@ -95,7 +98,7 @@ if __name__ == "__main__":
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+            '''
     # Oslobađanje resursa
     cap.release()
     out.release()

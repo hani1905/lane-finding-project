@@ -40,7 +40,10 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 
 #### 1. Provide an example of a distortion-corrected image.
 
-TODO: Add your text here!!!
+<p align="center">
+  <img src="test_images/straight_lines2.jpg" alt="Image 1" width="30%"/>
+  <img src="calibrated_image1.jpg" alt="Image 2" width="30%"/>
+</p>
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
