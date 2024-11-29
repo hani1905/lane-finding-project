@@ -48,6 +48,7 @@ if __name__ == "__main__":
 
         if not ret:
             break  
+        
 
         # 1. CALIBRATION - Korekcija distorzije slike
         calibrated_image = dc.correct_distrotion(frame)

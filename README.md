@@ -33,7 +33,7 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 
 <p align="center">
   <img src="camera_cal/calibration1.jpg" alt="Image 1" width="30%"/>
-width="30%" />
+  <img src="calibrated_image.jpg" alt="Image 2" width="30%"/>
 </p>
 
 ### Pipeline (single images)
