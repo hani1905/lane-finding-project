@@ -4,82 +4,98 @@ import modules.calibration as cal
 import modules.distortion_correct as dc
 import modules.binary_image as bi
 import modules.birds_eye as be
+import modules.find_lanes as fl
+import modules.draw as rd
 import numpy as np
 
 
-# Funkcija za prikaz informacija o pikselima
+
 def prikazi_piksele(event, x, y, flags, param):
     slika = param
-    if event == cv2.EVENT_LBUTTONDOWN:  # Kada kliknete levim tasterom miša
+    if event == cv2.EVENT_LBUTTONDOWN:  
         pixel = slika[y, x]
         print(f"Koordinate: ({x}, {y}), Vrednost piksela: {pixel}")
 
 
 if __name__ == "__main__":
 
-    ## CALIBRATION 1. ##
     file_path = "camera_cal/calib.npz"
     if not os.path.exists(file_path):
         cal.calibration()
     
-    ## Distortion apply, only to some photos ##
-    image = cv2.imread("test_images/straight_lines1.jpg")
-        
-    calibrated_image = dc.correct_distrotion(image)
+   
+    input_video_path = "test_videos/project_video03.mp4"  
+    output_video_path = "output_video/output.mp4"  
 
-
-    ## creating binary image
-    binary_output = bi.combine_thresholds(calibrated_image)
-
-    ## results
-    cv2.imshow('Original Image', image)
-    cv2.imshow('Calibrated Image', calibrated_image)
-    cv2.imshow('Binary Image', binary_output * 255) 
-
-    cv2.setMouseCallback('Calibrated Image', prikazi_piksele, calibrated_image)
-
-
-    mask = np.zeros_like(binary_output)
-    height, width = calibrated_image.shape[:2]
-    roi_corners = np.array([[
-        (50, height),                 # Donja leva tačka
-        (width - 50, height),         # Donja desna tačka
-        (width // 2 + 100, height // 2 + 50),  # Gornja desna tačka
-        (width // 2 - 50, height // 2 + 50)   # Gornja leva tačka
-    ]], dtype=np.int32)
-
-    cv2.fillPoly(mask, roi_corners, 255)
-    mask1 = cv2.bitwise_and(binary_output, mask)
-
-    cv2.imshow('Binary Image1', mask1 * 255) 
-    line_dst_offset = 200
-
-
-    #################################WARPING BIRDS EYE#################################
-
-
-    # [cols, rows]
-    #works for 1280x720 
-    #TODO 960x540
-    pt_A = [0, height]
-    pt_B = [width,height]
-    pt_C = [width * 0.6 - 80, height/2 + 90]
-    pt_D = [width * 0.45 + 20, height/2 + 90]
+    cap = cv2.VideoCapture(input_video_path)
 
     
-    src = np.float32([pt_D,pt_A,pt_B,pt_C])
-    dst = np.float32([[0+400, 0],
-                        [0+200, height],
-                        [width-200, height],
-                        [width - 350, 0]])
-    
-    
-    warped  = be.warper(mask1*255,src,dst)
+    if not cap.isOpened():
+        print("Error: Could not open video.")
+        exit()
 
-    cv2.imshow('warped', warped) 
+  
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
 
-    cv2.waitKey(0)
+   
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+
+    while True:
+        ret, frame = cap.read()
+
+        if not ret:
+            break  
+
+        # 1. CALIBRATION - Korekcija distorzije slike
+        calibrated_image = dc.correct_distrotion(frame)
+
+        # 2. binary image
+        binary_output = bi.combine_thresholds(calibrated_image)
+
+        mask = np.zeros_like(binary_output)
+        height, width = calibrated_image.shape[:2]
+        roi_corners = np.array([[
+            (50, height),
+            (width - 50, height),
+            (width // 2 + 100, height // 2 + 50),
+            (width // 2 - 50, height // 2 + 50)
+        ]], dtype=np.int32)
+
+        cv2.fillPoly(mask, roi_corners, 255)
+        mask1 = cv2.bitwise_and(binary_output, mask)
+
+        # WARPING BIRDS EYE
+        pt_A = [0, height]
+        pt_B = [width, height]
+        pt_C = [width * 0.6 - 80, height / 2 + 90]
+        pt_D = [width * 0.45 + 20, height / 2 + 90]
+
+        src = np.float32([pt_D, pt_A, pt_B, pt_C])
+        dst = np.float32([[0 + 400, 0],
+                          [0 + 200, height],
+                          [width - 200, height],
+                          [width - 350, 0]])
+
+        warped = be.warper(mask1 * 255, src, dst)
+
+        # 4. Fit and visualize lane lines
+        ploty = np.linspace(0, warped.shape[0] - 1, warped.shape[0])
+        left_values, right_values = fl.fit_and_visualize(warped)
+
+        # 5. Final output with warped lane lines
+        final = rd.warp_back_and_draw_lines(calibrated_image, warped, left_values, right_values, ploty, src, dst)
+
+        cv2.imshow('Final', final)
+
+        out.write(final)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # Oslobađanje resursa
+    cap.release()
+    out.release()
     cv2.destroyAllWindows()
-
-
-    

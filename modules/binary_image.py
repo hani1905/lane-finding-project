@@ -10,19 +10,6 @@ def combine_thresholds(image):
     combined_binary = np.zeros_like(mag_binary)
     combined_binary[(mag_binary == 1) | (color_binary == 1)] = 1
 
-    '''
-    mask = np.zeros_like(combined_binary)
-    height, width = image.shape[:2]
-    roi_corners = np.array([[
-        (50, height),                 # Donja leva tačka
-        (width - 50, height),         # Donja desna tačka
-        (width // 2 + 100, height // 2 + 50),  # Gornja desna tačka
-        (width // 2 - 50, height // 2 + 50)   # Gornja leva tačka
-    ]], dtype=np.int32)
-
-    cv2.fillPoly(mask, roi_corners, 255)
-    mask1 = cv2.bitwise_and(combined_binary, mask)
-    '''
     return combined_binary
 
 def magnitude_threshold(image, sobel_kernel=7, mag_thresh=(3, 255)):

@@ -5,7 +5,7 @@ import glob
 def calibration():
     
     # Define the chess board rows and columns
-    rows = 5
+    rows = 6
     cols = 9
 
     # Set the termination criteria for the corner sub-pixel algorithm
@@ -56,3 +56,6 @@ def calibration():
         error += cv2.norm(imgPointsArray[i], imgPoints, cv2.NORM_L2) / len(imgPoints)
 
     print("Total error: ", error / len(objectPointsArray))
+
+
+
