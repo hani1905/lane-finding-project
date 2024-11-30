@@ -144,10 +144,50 @@ right_fit_coefficients = np.polyfit(right_y_positions, right_x_positions, 2)
 </p>
 
 
-
-
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
+**Radius of Curvature**
+The curvature is calculated for both the left and right lane lines in real-world space by:
+
+Converting pixels to meters using the conversion factors ym_per_pix (meters per pixel in the vertical direction) and xm_per_pix (meters per pixel in the horizontal direction). This step adjusts for real-world lane dimensions.
+```python
+   if binary_warped.shape[0] == 540:
+        # Conversion factors for pixels to meters
+        ym_per_pix = 30 / 540  # meters per pixel in y dimension
+        xm_per_pix = 3.7 / 480  # meters per pixel in x dimension (average lane width is 3.7 meters)
+    else:
+        ym_per_pix = 30 / 720 
+        xm_per_pix = 3.7 / 700
+```
+Fitting a new polynomial for lane line curvature in the real-world coordinate system
+Calculating the radius of curvature at the bottom of the image (y_eval), using the formula, where left_fit_cr[0-1] and right_fit_cr[0-1] are the coefficients of the second degree polynomal fit:
+```python
+left_curverad = ((1 + (2 * left_fit_cr[0] * y_eval + left_fit_cr[1]) ** 2) ** 1.5) / np.absolute(2 * left_fit_cr[0])
+right_curverad = ((1 + (2 * right_fit_cr[0] * y_eval + right_fit_cr[1]) ** 2) ** 1.5) / np.absolute(2 * right_fit_cr[0])
+```
+Averaging the curvature of both lane lines for a combined radius of curvature.
+```python
+  curvature_radius = (left_curverad + right_curverad) / 2
+```
+**Vehicle position**
+
+Calculating the lane center at the bottom of the image using the fitted polynomials for the left and right lanes:
+```python
+  left_x_bottom = left_fit[0] * y_eval**2 + left_fit[1] * y_eval + left_fit[2]
+  right_x_bottom = right_fit[0] * y_eval**2 + right_fit[1] * y_eval + right_fit[2]
+  lane_center = (left_x_bottom + right_x_bottom) / 2
+```
+
+Determining the vehicle center based on the image dimensions, assuming the camera is mounted at the center of the vehicle:
+```python
+  vehicle_center = (binary_warped.shape[1] / 2)
+```
+
+Calculating the offset in pixels and converting it to meters using the horizontal conversion factor:
+```python
+  vehicle_offset_pixels = image_center - lane_center
+  vehicle_offset_meters = vehicle_offset_pixels * xm_per_pix
+```
 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
