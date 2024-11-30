@@ -6,7 +6,9 @@ import modules.binary_image as bi
 import modules.birds_eye as be
 import modules.find_lanes as fl
 import modules.draw as rd
+import modules.radius_and_position as rp
 import numpy as np
+
 
 
 
@@ -24,7 +26,7 @@ if __name__ == "__main__":
         cal.calibration()
     
    
-    input_video_path = "test_videos/project_video01.mp4"  
+    input_video_path = "test_videos/challenge01.mp4"  
     output_video_path = "output_video/output.mp4"  
 
     cap = cv2.VideoCapture(input_video_path)
@@ -42,7 +44,8 @@ if __name__ == "__main__":
    
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
-
+    image = cv2.imread('test_images/straight_lines2.jpg')
+    a = 0
     while True:
         ret, frame = cap.read()
 
@@ -52,9 +55,13 @@ if __name__ == "__main__":
 
         # 1. CALIBRATION - Korekcija distorzije slike
         calibrated_image = dc.correct_distrotion(frame)
-
+        if a == 0:
+            calibrated_image1 = dc.correct_distrotion(image)
+            cv2.imwrite('test_images/calibrated_image2.jpg', calibrated_image1)
+            a = a+1
         # 2. binary image
         binary_output = bi.combine_thresholds(calibrated_image)
+
 
         mask = np.zeros_like(binary_output)
         height, width = calibrated_image.shape[:2]
@@ -83,8 +90,8 @@ if __name__ == "__main__":
         else:
             pt_A = [0, height]
             pt_B = [width, height]
-            pt_C = [558,343]
-            pt_D = [476,343]
+            pt_C = [548,343]
+            pt_D = [410,343]
 
             src = np.float32([pt_D, pt_A, pt_B, pt_C])
             dst = np.float32([[200, 0],
@@ -96,10 +103,12 @@ if __name__ == "__main__":
 
         # 4. Fit and visualize lane lines
         ploty = np.linspace(0, warped.shape[0] - 1, warped.shape[0])
-        left_values, right_values = fl.fit_and_visualize(warped)
+        left_values, right_values,left_x,right_x = fl.fit_and_visualize(warped)
+
+        radius, position = rp.radius_and_position_func(warped,left_values,right_values)
 
         # 5. Final output with warped lane lines
-        final = rd.warp_back_and_draw_lines(calibrated_image, warped, left_values, right_values, ploty, src, dst)
+        final = rd.warp_back_and_draw_lines(calibrated_image, warped, left_x, right_x, ploty, src, dst,radius,position)
 
         cv2.imshow('Final', final)
 

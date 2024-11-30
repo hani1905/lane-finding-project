@@ -13,6 +13,7 @@ def correct_distrotion(img):
 
     # Obtain the new camera matrix and undistort the image
     newCameraMtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
-    undistortedImg = cv2.undistort(img, mtx, dist, None,newCameraMtx)
+    undistortedImg = cv2.undistort(img, mtx, dist, None, mtx)
+    
 
     return undistortedImg

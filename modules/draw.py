@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from modules.birds_eye import warper as warp
 
-def warp_back_and_draw_lines(original_image, binary_warped, left_fit_x, right_fit_x, ploty, src, dst):
+def warp_back_and_draw_lines(original_image, binary_warped, left_fit_x, right_fit_x, ploty, src, dst,radius,position):
     warp_zero = np.zeros_like(binary_warped).astype(np.uint8)
     color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
     
@@ -33,4 +33,11 @@ def warp_back_and_draw_lines(original_image, binary_warped, left_fit_x, right_fi
 
     # linije plus originalna slika
     result = cv.addWeighted(original_image, 1, unwarped, 0.3, 0)
+
+    curvature_text = f"Curvature: Left = {radius:.2f}m"
+    position_text = f"Vehicle Position: {abs(position):.2f} m {'left' if position < 0 else 'right'} of center"
+
+    # Overlay text on the frame
+    cv.putText(result, curvature_text, (50, 50), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv.LINE_AA)
+    cv.putText(result, position_text, (50, 100), cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv.LINE_AA)
     return result

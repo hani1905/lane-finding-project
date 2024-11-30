@@ -74,8 +74,7 @@ def fit_and_visualize(binary_image):
     right_fit_x_values = right_fit_coefficients[0] * ploty**2 + right_fit_coefficients[1] * ploty + right_fit_coefficients[2]
 
 
-   
-    
+
     '''
     out_img = np.dstack((binary_image, binary_image, binary_image)) * 255
     plt.imshow(out_img, cmap='gray')
@@ -95,8 +94,6 @@ def fit_and_visualize(binary_image):
     plt.ylim(binary_image.shape[0], 0)
     plt.show()
 
-
-    # Zatvori prozor
     cv.destroyAllWindows()
-    '''
-    return left_fit_x_values,right_fit_x_values
+    '''    
+    return left_fit_coefficients,right_fit_coefficients,left_fit_x_values,right_fit_x_values

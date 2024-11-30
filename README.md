@@ -29,7 +29,7 @@ The goals / steps of this project are the following:
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-Set of chessboard images with visible pattern are used to compute the camera matrix and distortion coefficients, but firstly detect the corners of the chessboard. Then 3D point were paired with the 2D points for each calibration image. Cv.calibrateCamera() function was used to compute the camera matrix and distortion coefficients. The result is stored in camera_cal/calib.npz.
+Set of chessboard images with visible pattern are used to compute the camera matrix and distortion coefficients, but firstly detect the corners of the chessboard. Then 3D point were paired with the 2D points for each calibration image. Cv.calibrateCamera() function was used to compute the camera matrix and distortion coefficients. The result is stored in camera_cal/calib.npz. 
 
 <p align="center">
   <img src="camera_cal/calibration1.jpg" alt="Image 1" width="30%"/>
@@ -39,10 +39,12 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
+When we use cv2.undistort(img, mtx, dist, None, newCameraMtx), we can choose if we want to use new optimal camera matrix provided from newCameraMtx = cv2.getOptimalNewCameraMatrix() or unchanged input matrix. In this project i used optimal, but instead of newCameraMtx we can simply use mtx for unchanged matrix.
 
 <p align="center">
   <img src="test_images/straight_lines2.jpg" alt="Image 1" width="30%"/>
   <img src="calibrated_image1.jpg" alt="Image 2" width="30%"/>
+  <img src="calibrated_image2.jpg" alt="Image 3" width="30%"/>
 </p>
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
