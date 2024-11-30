@@ -192,7 +192,9 @@ Calculating the offset in pixels and converting it to meters using the horizonta
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-TODO: Add your text here!!!
+<p align="center">
+  <img src="test_images/straight_lines2.jpg" alt="Image 1" width="40%"/>
+  <img src="screenshot1.png" alt="Image 2" width="40%"/>
 
 ### Pipeline (video)
 
