@@ -194,13 +194,13 @@ Calculating the offset in pixels and converting it to meters using the horizonta
 
 <p align="center">
   <img src="test_images/straight_lines2.jpg" alt="Image 1" width="40%"/>
-  <img src="screenshot1.png" alt="Image 2" width="40%"/>
+  <img src="screenshot3.png" alt="Image 2" width="40%"/>
 
 ### Pipeline (video)
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-TODO: Add your text here!!!
+<video controls src="output.mp4" title="Title"></video>
 
 ### Discussion
 

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
    
     input_video_path = "test_videos/project_video01.mp4"  
-    output_video_path = "output_video/output.mp4"  
+    output_video_path = "output.mp4"  
 
     cap = cv2.VideoCapture(input_video_path)
 
@@ -44,8 +44,7 @@ if __name__ == "__main__":
    
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
-    image = cv2.imread('test_images/straight_lines2.jpg')
-    a = 1
+    
     while True:
         ret, frame = cap.read()
 
@@ -55,10 +54,7 @@ if __name__ == "__main__":
 
         # 1. CALIBRATION - Korekcija distorzije slike
         calibrated_image = dc.correct_distrotion(frame)
-        if a == 0:
-            calibrated_image1 = dc.correct_distrotion(image)
-            cv2.imwrite('test_images/calibrated_image2.jpg', calibrated_image1)
-            a = a+1
+    
         # 2. binary image
         binary_output = bi.combine_thresholds(calibrated_image)
 

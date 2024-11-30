@@ -34,7 +34,7 @@ def warp_back_and_draw_lines(original_image, binary_warped, left_fit_x, right_fi
     # linije plus originalna slika
     result = cv.addWeighted(original_image, 1, unwarped, 0.3, 0)
 
-    curvature_text = f"Curvature: Left = {radius:.2f}m"
+    curvature_text = f"Radius = {radius:.2f}m"
     position_text = f"Vehicle Position: {abs(position):.2f} m {'left' if position < 0 else 'right'} of center"
 
     # Overlay text on the frame
