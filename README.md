@@ -138,12 +138,17 @@ Once the lane-line pixels were identified, a second-order polynomial was fitted 
 left_fit_coefficients = np.polyfit(left_y_positions, left_x_positions, 2)
 right_fit_coefficients = np.polyfit(right_y_positions, right_x_positions, 2)
 ```
+<p align="center">
+  <img src="calibrated_image2.jpg" alt="Image 1" width="30%"/>
+  <img src="Screenshot.png" alt="Image 2" width="30%"/>
+</p>
+
 
 
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-TODO: Add your text here!!!
+
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 

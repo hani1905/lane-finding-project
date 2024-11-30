@@ -26,7 +26,7 @@ if __name__ == "__main__":
         cal.calibration()
     
    
-    input_video_path = "test_videos/challenge01.mp4"  
+    input_video_path = "test_videos/project_video01.mp4"  
     output_video_path = "output_video/output.mp4"  
 
     cap = cv2.VideoCapture(input_video_path)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
     out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
     image = cv2.imread('test_images/straight_lines2.jpg')
-    a = 0
+    a = 1
     while True:
         ret, frame = cap.read()
 

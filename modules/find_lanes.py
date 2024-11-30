@@ -95,5 +95,5 @@ def fit_and_visualize(binary_image):
     plt.show()
 
     cv.destroyAllWindows()
-    '''    
+    '''  
     return left_fit_coefficients,right_fit_coefficients,left_fit_x_values,right_fit_x_values
