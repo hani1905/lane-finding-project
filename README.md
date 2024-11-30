@@ -39,7 +39,7 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
-When we use cv2.undistort(img, mtx, dist, None, newCameraMtx), we can choose if we want to use new optimal camera matrix provided from newCameraMtx = cv2.getOptimalNewCameraMatrix() or unchanged input matrix. In this project i used optimal, but instead of newCameraMtx we can simply use mtx for unchanged matrix.
+When we use cv2.undistort(img, mtx, dist, None, newCameraMtx), we can choose if we want to use new optimal camera matrix provided from newCameraMtx = cv2.getOptimalNewCameraMatrix() or unchanged input matrix. 
 
 <p align="center">
   <img src="test_images/straight_lines2.jpg" alt="Image 1" width="30%"/>
@@ -76,7 +76,70 @@ Later on in draw.py i used cv2.getPerspectiveTransform() again to inverse matrix
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-TODO: Add your text here!!!
+To identify lane-line pixels in the binary warped image, the sliding window method was implemented. Initially, a histogram of pixel intensity was computed across the lower half of the image using the calculate_histogram function. The histogram's peaks on the left and right sides of the image were used to estimate the starting positions of the left and right lane lines, respectively. This serves as the base for the sliding windows.
+
+```python 
+def calculate_histogram(binary_image):
+    return np.sum(binary_image[binary_image.shape[0]//2:, :], axis=0)
+
+histogram = calculate_histogram(binary_image)
+midpoint = int(histogram.shape[0] / 2)
+left_base_x = np.argmax(histogram[:midpoint])
+right_base_x = np.argmax(histogram[midpoint:]) + midpoint
+```
+The sliding window technique iteratively searches for lane-line pixels. The binary image is divided into vertical windows, and within each window, a search is performed around the current lane-line position. If sufficient lane-line pixels are found in a window, the center of the window is updated to the mean x-coordinate of those pixels. This process repeats for all windows, effectively capturing the x and y positions of lane-line pixels for both the left and right lanes. The results are stored as left_x_positions, left_y_positions, right_x_positions, and right_y_positions.
+
+```python
+  def sliding_window(binary_image, num_windows=9, window_margin=100, min_pixels=50):
+    window_height = int(binary_image.shape[0] / num_windows)
+    nonzero = binary_image.nonzero()
+    nonzeroy = np.array(nonzero[0])
+    nonzerox = np.array(nonzero[1])
+
+    left_current_x = left_base_x
+    right_current_x = right_base_x
+    left_lane_indices = []
+    right_lane_indices = []
+
+    for window in range(num_windows):
+        win_y_low = binary_image.shape[0] - (window + 1) * window_height
+        win_y_high = binary_image.shape[0] - window * window_height
+        win_xleft_low = left_current_x - window_margin
+        win_xleft_high = left_current_x + window_margin
+        win_xright_low = right_current_x - window_margin
+        win_xright_high = right_current_x + window_margin
+
+        valid_left_indices = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
+                              (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+        valid_right_indices = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
+                               (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+
+        left_lane_indices.append(valid_left_indices)
+        right_lane_indices.append(valid_right_indices)
+
+        if len(valid_left_indices) > min_pixels:
+            left_current_x = int(np.mean(nonzerox[valid_left_indices]))
+        if len(valid_right_indices) > min_pixels:
+            right_current_x = int(np.mean(nonzerox[valid_right_indices]))
+
+    left_lane_indices = np.concatenate(left_lane_indices)
+    right_lane_indices = np.concatenate(right_lane_indices)
+
+    left_x_positions = nonzerox[left_lane_indices]
+    left_y_positions = nonzeroy[left_lane_indices]
+    right_x_positions = nonzerox[right_lane_indices]
+    right_y_positions = nonzeroy[right_lane_indices]
+
+    return left_x_positions, left_y_positions, right_x_positions, right_y_positions
+```
+Once the lane-line pixels were identified, a second-order polynomial was fitted to the detected points for both the left and right lane lines using numpy.polyfit. This polynomial fitting generates coefficients that define the curve for each lane line. The resulting polynomial equations allow for calculating the x-positions of the lane lines across the y-axis range of the image.
+
+```python
+left_fit_coefficients = np.polyfit(left_y_positions, left_x_positions, 2)
+right_fit_coefficients = np.polyfit(right_y_positions, right_x_positions, 2)
+```
+
+
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
