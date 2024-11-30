@@ -200,7 +200,8 @@ Calculating the offset in pixels and converting it to meters using the horizonta
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-<video controls src="output.mp4" title="Title"></video>
+### Final Video Output
+[Click here for video](https://github.com/hani1905/lane-finding-project/blob/main/output.mp4)
 
 ### Discussion
 
