@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
    
     input_video_path = "test_videos/project_video01.mp4"  
-    output_video_path = "output.mp4"  
+    output_video_path = "output_delete.mp4"  
 
     cap = cv2.VideoCapture(input_video_path)
 
@@ -50,13 +50,13 @@ if __name__ == "__main__":
 
         if not ret:
             break  
-        
 
         # 1. CALIBRATION - Korekcija distorzije slike
         calibrated_image = dc.correct_distrotion(frame)
-    
+
         # 2. binary image
         binary_output = bi.combine_thresholds(calibrated_image)
+           
 
 
         mask = np.zeros_like(binary_output)

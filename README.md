@@ -34,6 +34,7 @@ Set of chessboard images with visible pattern are used to compute the camera mat
 <p align="center">
   <img src="camera_cal/calibration1.jpg" alt="Image 1" width="30%"/>
   <img src="calibrated_image.jpg" alt="Image 2" width="30%"/>
+  <img src="calibration_c.jpg" alt="Image 3" width="30%"/>
 </p>
 
 ### Pipeline (single images)
@@ -58,7 +59,7 @@ The magnitude_threshold function calculates the gradient magnitude of the image 
 The combine_thresholds function creates a binary image by combining two separate thresholding methods: one based on gradient magnitude and the other on color filtering. It merges the results into a single binary mask, where pixels are set to 1 if they meet the criteria from either method.
 
 <p align="center">
-  <img src="test_images/straight_lines2.jpg" alt="Image 1" width="30%"/>
+  <img src="test_images/test2.jpg" alt="Image 1" width="30%"/>
   <img src="binary_image.jpg" alt="Image 2" width="30%"/>
 </p>
 
@@ -207,5 +208,11 @@ Calculating the offset in pixels and converting it to meters using the horizonta
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-TODO: Add your text here!!!
+One of the challenges I faced during the implementation was correctly matching the src and dst values for images of varying sizes. This issue can be addressed by consistently resizing all images to the same dimensions before processing.
+
+Another issue arose when filtering yellow and white colors, as it was tricky to set appropriate thresholds that worked reliably. Shadows or adverse weather conditions could cause inaccuracies in detection, which highlights a limitation of the current implementation.
+
+The system could fail under varying lighting conditions (e.g., overexposure or shadows), complex road lanes. Additionally, manually tuned thresholds might not generalize well to different scenarios, and high computational demands could impact real-time performance.
+
+To make the system more robust, I could implement adaptive techniques such as dynamically adjusting thresholds based on lighting conditions.Incorporating a machine learning model trained on diverse datasets could help generalize detection across different scenarios.If the system fails, logging errors and failures for further analysis could help identify patterns and improve the system over time.
 
